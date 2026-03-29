@@ -1,67 +1,95 @@
-import React from "react";
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import { ScrollView, StyleSheet, Text, View, StatusBar } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Bell } from 'lucide-react-native';
+import { colors, fontType } from './assets/theme';
+import ListBlog from './src/components/ListBlog';
+import { useFonts } from 'expo-font';
 
 export default function App() {
+  const [loaded] = useFonts(fontType);
 
-  const menuMakanan = [
-    { id: "1", nama: "Nasi Goreng", harga: "Rp 15.000" },
-    { id: "2", nama: "Mie Ayam", harga: "Rp 12.000" },
-    { id: "3", nama: "Bakso", harga: "Rp 13.000" },
-    { id: "4", nama: "Sate Ayam", harga: "Rp 20.000" },
-    { id: "5", nama: "Es Teh", harga: "Rp 5.000" },
-  ];
-
-  const renderMenu = ({ item }) => (
-    <View style={styles.card}>
-      <Text style={styles.nama}>{item.nama}</Text>
-      <Text style={styles.harga}>{item.harga}</Text>
-    </View>
-  );
+  if (!loaded) {
+    return null;
+  }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Menu Makanan Hari Ini</Text>
-
-      <FlatList
-        data={menuMakanan}
-        renderItem={renderMenu}
-        keyExtractor={(item) => item.id}
-      />
-
-    </View>
+    <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="dark-content" backgroundColor={colors.white()} />
+      <View style={styles.header}>
+        <Text style={styles.title}>WOCO.</Text>
+        <Bell color={colors.black()} size={24} />
+      </View>
+      <View style={styles.listCategory}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <View style={{ ...category.item, marginLeft: 24 }}>
+            <Text style={{ ...category.title, color: colors.blue() }}>
+              Popular
+            </Text>
+          </View>
+          <View style={category.item}>
+            <Text style={category.title}>Latest</Text>
+          </View>
+          <View style={category.item}>
+            <Text style={category.title}>Technology</Text>
+          </View>
+          <View style={category.item}>
+            <Text style={category.title}>Fashion</Text>
+          </View>
+          <View style={category.item}>
+            <Text style={category.title}>Health</Text>
+          </View>
+          <View style={{ ...category.item, marginRight: 24 }}>
+            <Text style={category.title}>Lifestyle</Text>
+          </View>
+        </ScrollView>
+      </View>
+      <ListBlog styles={styles} />
+    </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f2f2f2",
-    padding: 20,
-    marginTop: 40
+    backgroundColor: colors.white(),
+    shadowColor: colors.white(),
   },
-
+  header: {
+    paddingHorizontal: 24,
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    alignItems: 'center',
+    height: 52,
+    paddingTop: 8,
+    paddingBottom: 4,
+    backgroundColor: colors.white(),
+  },
   title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20
+    fontSize: 20,
+    fontFamily: 'Pjs-ExtraBold',
+    color: colors.black(),
   },
-
-  card: {
-    backgroundColor: "white",
-    padding: 15,
-    marginBottom: 10,
-    borderRadius: 10,
-    elevation: 3
+  listCategory: {
+    paddingVertical: 10,
   },
-
-  nama: {
-    fontSize: 18,
-    fontWeight: "bold"
+  listBlog: {
+    paddingVertical: 10,
+    gap: 10,
   },
-
-  harga: {
-    fontSize: 16,
-    color: "green"
-  }
 });
+const category = StyleSheet.create({
+  item: {
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 25,
+    alignItems: 'center',
+    backgroundColor: colors.grey(0.08),
+    marginHorizontal: 5
+  },
+  title: {
+    fontFamily: 'Pjs-SemiBold',
+    fontSize: 14,
+    lineHeight: 18,
+    color: colors.grey(),
+  },
+});
+
